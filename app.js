@@ -5,6 +5,8 @@ require('dotenv').config()
 
 const app = express()
 
+const Todo = require('./models/todo')
+
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true }) // 設定連線到 mongoDB
 
 // 取得資料庫連線狀態
@@ -24,7 +26,11 @@ app.set('view engine', 'hbs')
 
 // 設定路由
 app.get('/', (req, res) => {
-  res.render('index')
+  // 拿到全部的 Todo 資料
+  Todo.find()
+    .lean()
+    .then(todos => res.render('index', { todos }))
+    .catch(err => console.error(err))
 })
 
 // 設定 port 3000
