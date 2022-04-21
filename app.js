@@ -1,10 +1,9 @@
 const express = require('express')
-const mongoose = require('mongoose') 
-
-const MONGODB_URI = "mongodb+srv://globelex65:Globelex1418@cluster0.a4qoq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+const mongoose = require('mongoose')
+require('dotenv').config()
 
 const app = express()
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true }) // 設定連線到 mongoDB
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true }) // 設定連線到 mongoDB
 
 // 取得資料庫連線狀態
 const db = mongoose.connection
