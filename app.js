@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
   Todo.find()
     .lean()
     .then(todos => res.render('index', { todos }))
-    .catch(err => console.error(err))
+    .catch(err => console.log(err))
 })
 
 app.get('/todos/new', (req, res) => {
@@ -50,7 +50,7 @@ app.post('/todos', (req, res) => {
   // 透過.save把資料送回資料庫
   return todo.save()
     .then(() => res.redirect('/'))
-    .catch(err => console.error(err))
+    .catch(err => console.log(err))
 
   // 方法二
   // 直接用 mongoose 語法告訴資料庫創建一筆資料
@@ -59,6 +59,15 @@ app.post('/todos', (req, res) => {
     .then(() => res.redirect('/'))
     .catch(err => console.error(err))
   */
+})
+
+// 設定middleware
+app.get('/todos/:id', (req, res) => {
+  const id = req.params.id
+  return Todo.findById(id)
+    .lean()
+    .then(todo => res.render('detail', { todo }))
+    .catch(err => console.log(err))
 })
 
 // 設定 port 3000
