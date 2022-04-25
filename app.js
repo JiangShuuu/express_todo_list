@@ -3,8 +3,11 @@ const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
 const Todo = require('./models/todo')
 const bodyParser = require('body-parser')
+const methodOverride = require('method-override')
+
 const app = express()
 const { redirect } = require('express/lib/response')
+
 
 require('dotenv').config()
 
@@ -27,6 +30,9 @@ app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
 
 app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use(methodOverride('_method'))
+
 
 // 設定路由
 app.get('/', (req, res) => {
@@ -80,7 +86,8 @@ app.get('/todos/:id/edit', (req, res) => {
     .catch(err => console.log(err))
 })
 
-app.post('/todos/:id/edit', (req, res) => {
+// 修改功能
+app.put('/todos/:id', (req, res) => {
   const id = req.params.id
   const { name , isDone } = req.body
   return Todo.findById(id)
@@ -94,7 +101,7 @@ app.post('/todos/:id/edit', (req, res) => {
 })
 
 // 刪除功能
-app.post('/todos/:id/delete', (req, res) => {
+app.delete('/todos/:id', (req, res) => {
   const id = req.params.id
   return Todo.findById(id)
     .then(todo => todo.remove())
