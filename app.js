@@ -5,11 +5,12 @@ const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 
 const routes = require('./routes')
+
+const usePassport = require('./config/passport')
 require('./config/mongoose')
 
 const app = express()
 const PORT = process.env.PORT || 3000
-
 
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
@@ -21,8 +22,12 @@ app.use(session({
   // 儲存驗證
   saveUninitialized: true
 }))
+
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
+
+// 使用passport
+usePassport(app)
 
 // 使用路由
 app.use(routes)
