@@ -13,7 +13,7 @@ module.exports = app => {
         if (!user) {
           return done(null, false, { message: 'That email is not registered!' })
         }
-        if (user.password !== password) {
+        if (user.password.toString() !== password.toString()) {
           return done(null, false, { message: 'Email or Password incorrect.' })
         }
         return done(null, user)
@@ -22,6 +22,7 @@ module.exports = app => {
   }))
 
   passport.serializeUser((user, done) => {
+    console.log(user)
     done(null, user.id)
   })
   passport.deserializeUser((id, done) => {
