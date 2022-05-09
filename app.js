@@ -29,7 +29,14 @@ app.use(methodOverride('_method'))
 // 使用passport
 usePassport(app)
 
+
 // 使用路由
+app.use((req, res, next) => {
+  console.log(req.user)
+  res.locals.isAuthenticated = req.isAuthenticated()
+  res.locals.user = req.user
+  next()
+})
 app.use(routes)
 
 // 設定 port 3000
