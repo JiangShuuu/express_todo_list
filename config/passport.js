@@ -1,5 +1,7 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
+const bcrypt = require('bcryptjs')
+
 
 const User = require('../models/user')
 
@@ -13,16 +15,19 @@ module.exports = app => {
         if (!user) {
           return done(null, false, { message: 'That email is not registered!' })
         }
-        if (user.password.toString() !== password.toString()) {
-          return done(null, false, { message: 'Email or Password incorrect.' })
-        }
-        return done(null, user)
+        return bcrypt.compare(password, user.password).then(isMatch => {
+          console.log(typeof password)
+          console.log(typeof user.password)
+          if (!isMatch) {
+            return done(null, false, { message: 'Email or Password incorrect.' })
+          }
+          return done(null, user)
+        })
       })
       .catch(err => done(err, false))
   }))
 
   passport.serializeUser((user, done) => {
-    console.log(user)
     done(null, user.id)
   })
   passport.deserializeUser((id, done) => {
